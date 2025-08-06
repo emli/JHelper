@@ -7,8 +7,7 @@
     <description>Sport programming tool to inline library code and provide testing framework.</description>
 
     <change-notes>
-        In 0.19 fixed configuration saving.
-        You may need to resave your configuration.
+        Support CLion 2025.2
     </change-notes>
 
     <idea-version since-build="252.23892.426"/>
