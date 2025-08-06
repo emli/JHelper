@@ -12,7 +12,8 @@
 
     <idea-version since-build="252.23892.426"/>
 
-    <depends>com.intellij.clion</depends>
+    <depends>com.intellij.modules.platform</depends>
+    <depends>com.intellij.modules.clion</depends>
     <depends>com.intellij.cidr.lang</depends>
 
 
