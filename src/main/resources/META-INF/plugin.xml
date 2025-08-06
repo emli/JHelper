@@ -1,15 +1,96 @@
-<!-- Plugin Configuration File. Read more: https://plugins.jetbrains.com/docs/intellij/plugin-configuration-file.html -->
 <idea-plugin>
-    <id>com.github.emli.plugin</id>
-    <name>plugin</name>
-    <vendor>emli</vendor>
+    <id>name.admitriev.jhelper</id>
+    <name>JHelper</name>
+    <version>_patched_</version>
+    <vendor url="https://github.com/AlexeyDmitriev/JHelper">JHelper</vendor>
+
+    <description>Sport programming tool to inline library code and provide testing framework.</description>
+
+    <change-notes>
+        In 0.19 fixed configuration saving.
+        You may need to resave your configuration.
+    </change-notes>
+
+    <idea-version since-build="252.23892.426"/>
 
     <depends>com.intellij.modules.platform</depends>
+    <depends>com.intellij.clion</depends>
 
-    <resource-bundle>messages.MyBundle</resource-bundle>
+
 
     <extensions defaultExtensionNs="com.intellij">
-        <toolWindow factoryClass="com.github.emli.plugin.toolWindow.MyToolWindowFactory" id="MyToolWindow"/>
-        <postStartupActivity implementation="com.github.emli.plugin.startup.MyProjectActivity" />
+        <configurationType implementation="name.admitriev.jhelper.configuration.TaskConfigurationType"/>
+        <programRunner implementation="name.admitriev.jhelper.configuration.TaskRunner"/>
+        <executionTargetProvider implementation="name.admitriev.jhelper.configuration.TaskConfigurationTargetProvider"/>
+        <notificationGroup id="JHelper" displayType="BALLOON"/>
     </extensions>
+
+    <application-components>
+        <!-- Add your application components here -->
+    </application-components>
+
+    <projectListeners>
+        <listener class="name.admitriev.jhelper.components.AutoSwitcher"
+                  topic="com.intellij.execution.RunManagerListener" />
+        <listener class="name.admitriev.jhelper.components.AutoSwitcher"
+                  topic="com.intellij.openapi.fileEditor.FileEditorManagerListener" />
+    </projectListeners>
+
+    <project-components>
+        <component>
+            <implementation-class>name.admitriev.jhelper.components.ChromeParser</implementation-class>
+        </component>
+    </project-components>
+
+    <actions>
+        <action
+                id="name.admitriev.jhelper.actions.configureAction"
+                class="name.admitriev.jhelper.actions.ConfigureAction"
+                text="Configure"
+                description="Configure JHelper"
+                icon="/name/admitriev/jhelper/icons/settings.png"
+        />
+        <action
+                id="name.admitriev.jhelper.actions.AddTaskAction"
+                class="name.admitriev.jhelper.actions.AddTaskAction"
+                text="Add Task"
+                description="Creates new task."
+                icon="/name/admitriev/jhelper/icons/newTask.png"
+        />
+        <action
+                id="name.admitriev.jhelper.actions.EditTestsAction"
+                class="name.admitriev.jhelper.actions.EditTestsAction"
+                text="Edit tests"
+                description="Edit tests for a current task"
+                icon="/name/admitriev/jhelper/icons/editTests.png"
+        />
+        <action
+                id="name.admitriev.jhelper.actions.CopySourceAction"
+                class="name.admitriev.jhelper.actions.CopySourceAction"
+                text="Copy source"
+                description="Copies source of output file"
+                icon="/name/admitriev/jhelper/icons/copy.png"
+        />
+        <action
+                id="name.admitriev.jhelper.actions.ParseContestAction"
+                class="name.admitriev.jhelper.actions.ParseContestAction"
+                text="Parse contest"
+                description="Creates a task for each problem in a contest"
+                icon="/name/admitriev/jhelper/icons/parseContest.png"
+        />
+        <action
+                id="name.admitriev.jhelper.actions.DeleteTaskAction"
+                class="name.admitriev.jhelper.actions.DeleteTaskAction"
+                text="Delete task"
+                description="Deletes selected configuration, its task file and class file"
+                icon="/name/admitriev/jhelper/icons/delete.png"
+        />
+        <action
+                id="name.admitriev.jhelper.actions.ProcessAction"
+                class="name.admitriev.jhelper.actions.ProcessAction"
+                text="Process file"
+                description="Inlines includes from the current file"
+                icon="/name/admitriev/jhelper/icons/task.png"
+        />
+    </actions>
 </idea-plugin>
