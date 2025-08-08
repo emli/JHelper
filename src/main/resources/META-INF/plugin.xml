@@ -14,7 +14,6 @@
 
     <depends>com.intellij.modules.platform</depends>
     <depends>com.intellij.modules.clion</depends>
-    <depends>com.intellij.modules.cidr.lang</depends>
     <depends>com.intellij.modules.cmake</depends>
 
 
