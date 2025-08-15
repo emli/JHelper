@@ -16,6 +16,7 @@
     <depends>com.intellij.modules.platform</depends>
     <depends>com.intellij.modules.clion</depends>
     <depends>com.intellij.modules.cmake</depends>
+    <depends>com.intellij.modules.lang</depends>
 
 
     <extensions defaultExtensionNs="com.intellij">

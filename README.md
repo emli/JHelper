@@ -50,3 +50,27 @@ Plugin based on the [IntelliJ Platform Plugin Template][template].
 
 [template]: https://github.com/JetBrains/intellij-platform-plugin-template
 [docs:plugin-description]: https://plugins.jetbrains.com/docs/intellij/plugin-user-experience.html#plugin-description-and-presentation
+
+# JHelper Plugin
+
+This plugin helps competitive programmers to participate in competitions by automating common tasks like parsing contests, creating task files, and generating submission files.
+
+## Recent Changes
+
+- Fixed plugin dependency issue: Added `com.intellij.modules.lang` dependency to ensure compatibility with CLion.
+- If you were experiencing the error "Plugin 'JHelper' requires plugin 'com.intellij.modules.cidr.lang' to be installed", this update should resolve that issue.
+
+## Features
+
+- Parse contests from various online judges
+- Create task files with test cases
+- Generate submission files by inlining includes
+- Run tests against sample inputs
+
+## Installation
+
+Install directly from JetBrains Plugin Repository or download the latest release and install manually.
+
+## Usage
+
+See the documentation for detailed usage instructions.
