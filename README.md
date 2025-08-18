@@ -18,11 +18,15 @@
 - [ ] Configure the [CODECOV_TOKEN](https://docs.codecov.com/docs/quick-start) secret for automated test coverage reports on PRs
 
 <!-- Plugin description -->
-This Fancy IntelliJ Platform Plugin is going to be your implementation of the brilliant ideas that you have.
 
-This specific section is a source for the [plugin.xml](/src/main/resources/META-INF/plugin.xml) file which will be extracted by the [Gradle](/build.gradle.kts) during the build process.
+Sport programming tool to inline library code and provide testing framework.
 
-To keep everything working, do not remove `<!-- ... -->` sections. 
+### Important
+
+Before installing, disable:
+
+File → Settings → Advanced Settings → Use the ReSharper C++ language engine (CLion Nova)
+
 <!-- Plugin description end -->
 
 ## Installation
@@ -55,11 +59,6 @@ Plugin based on the [IntelliJ Platform Plugin Template][template].
 
 This plugin helps competitive programmers to participate in competitions by automating common tasks like parsing contests, creating task files, and generating submission files.
 
-## Recent Changes
-
-- Fixed plugin dependency issue: Added `com.intellij.modules.lang` dependency to ensure compatibility with CLion.
-- If you were experiencing the error "Plugin 'JHelper' requires plugin 'com.intellij.modules.cidr.lang' to be installed", this update should resolve that issue.
-
 ## Features
 
 - Parse contests from various online judges
@@ -68,6 +67,12 @@ This plugin helps competitive programmers to participate in competitions by auto
 - Run tests against sample inputs
 
 ## Installation
+
+### Important
+
+Before installing, disable:
+
+File → Settings → Advanced Settings → Use the ReSharper C++ language engine (CLion Nova)
 
 Install directly from JetBrains Plugin Repository or download the latest release and install manually.
 
