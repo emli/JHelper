@@ -1,8 +1,8 @@
 # plugin
 
 ![Build](https://github.com/emli/plugin/workflows/Build/badge.svg)
-[![Version](https://img.shields.io/jetbrains/plugin/v/MARKETPLACE_ID.svg)](https://plugins.jetbrains.com/plugin/MARKETPLACE_ID)
-[![Downloads](https://img.shields.io/jetbrains/plugin/d/MARKETPLACE_ID.svg)](https://plugins.jetbrains.com/plugin/MARKETPLACE_ID)
+[![Version](https://img.shields.io/jetbrains/plugin/v/7541-jhelper.svg)](https://plugins.jetbrains.com/plugin/7541-jhelper)
+[![Downloads](https://img.shields.io/jetbrains/plugin/d/7541-jhelper.svg)](https://plugins.jetbrains.com/plugin/7541-jhelper)
 
 ## Template ToDo list
 - [x] Create a new [IntelliJ Platform Plugin Template][template] project.
@@ -18,11 +18,15 @@
 - [ ] Configure the [CODECOV_TOKEN](https://docs.codecov.com/docs/quick-start) secret for automated test coverage reports on PRs
 
 <!-- Plugin description -->
-This Fancy IntelliJ Platform Plugin is going to be your implementation of the brilliant ideas that you have.
 
-This specific section is a source for the [plugin.xml](/src/main/resources/META-INF/plugin.xml) file which will be extracted by the [Gradle](/build.gradle.kts) during the build process.
+Sport programming tool to inline library code and provide testing framework.
 
-To keep everything working, do not remove `<!-- ... -->` sections. 
+### Important
+
+Before installing, disable:
+
+File → Settings → Advanced Settings → Use the ReSharper C++ language engine (CLion Nova)
+
 <!-- Plugin description end -->
 
 ## Installation
@@ -34,9 +38,9 @@ To keep everything working, do not remove `<!-- ... -->` sections.
   
 - Using JetBrains Marketplace:
 
-  Go to [JetBrains Marketplace](https://plugins.jetbrains.com/plugin/MARKETPLACE_ID) and install it by clicking the <kbd>Install to ...</kbd> button in case your IDE is running.
+  Go to [JetBrains Marketplace](https://plugins.jetbrains.com/plugin/7541-jhelper) and install it by clicking the <kbd>Install to ...</kbd> button in case your IDE is running.
 
-  You can also download the [latest release](https://plugins.jetbrains.com/plugin/MARKETPLACE_ID/versions) from JetBrains Marketplace and install it manually using
+  You can also download the [latest release](https://plugins.jetbrains.com/plugin/7541-jhelper/versions) from JetBrains Marketplace and install it manually using
   <kbd>Settings/Preferences</kbd> > <kbd>Plugins</kbd> > <kbd>⚙️</kbd> > <kbd>Install plugin from disk...</kbd>
 
 - Manually:
@@ -50,3 +54,28 @@ Plugin based on the [IntelliJ Platform Plugin Template][template].
 
 [template]: https://github.com/JetBrains/intellij-platform-plugin-template
 [docs:plugin-description]: https://plugins.jetbrains.com/docs/intellij/plugin-user-experience.html#plugin-description-and-presentation
+
+# JHelper Plugin
+
+This plugin helps competitive programmers to participate in competitions by automating common tasks like parsing contests, creating task files, and generating submission files.
+
+## Features
+
+- Parse contests from various online judges
+- Create task files with test cases
+- Generate submission files by inlining includes
+- Run tests against sample inputs
+
+## Installation
+
+### Important
+
+Before installing, disable:
+
+File → Settings → Advanced Settings → Use the ReSharper C++ language engine (CLion Nova)
+
+Install directly from JetBrains Plugin Repository or download the latest release and install manually.
+
+## Usage
+
+See the documentation for detailed usage instructions.
