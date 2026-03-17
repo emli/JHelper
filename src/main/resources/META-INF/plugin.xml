@@ -40,6 +40,9 @@
         <component>
             <implementation-class>name.admitriev.jhelper.components.ChromeParser</implementation-class>
         </component>
+        <component>
+            <implementation-class>name.admitriev.jhelper.components.RemoteControlServer</implementation-class>
+        </component>
     </project-components>
 
     <actions>
