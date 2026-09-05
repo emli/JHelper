@@ -31,8 +31,11 @@ public class TaskUtils {
 	}
 
 	public static VirtualFile saveNewTask(TaskData taskData, Project project) {
+		// Write the file first. Creating the run configuration first meant that if file creation failed
+		// the project was left with a configuration pointing at a task file that does not exist.
+		VirtualFile file = generateCPP(project, taskData);
 		createConfigurationForTask(project, taskData);
-		return generateCPP(project, taskData);
+		return file;
 	}
 
 	/**
