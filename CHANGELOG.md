@@ -4,6 +4,9 @@
 
 ## [Unreleased]
 ### Fixed
+- Parsing died with `NoClassDefFoundError: org/apache/commons/lang/StringEscapeUtils`. CHelper uses
+  Commons Lang 2, which the platform used to provide and no longer does, so the plugin now ships it.
+  This affects the Codeforces, Facebook, HackerEarth, USACO and CodeChef parsers.
 - Parse contest created nothing on Codeforces. Codeforces changed three things the bundled CHelper
   parser matches literally — `input-file`/`output-file` divs gained a second class, sample lines are
   now wrapped one per `div` inside the `pre`, and `pre` no longer carries attributes — so every task

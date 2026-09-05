@@ -37,6 +37,11 @@ dependencies {
     testImplementation(libs.opentest4j)
     implementation(files("lib/chelper.jar"))
 
+    // chelper.jar calls org.apache.commons.lang.StringEscapeUtils while parsing problem pages. Commons
+    // Lang 2 used to come with the platform and no longer does, so the plugin has to ship it: without it
+    // parsing dies with NoClassDefFoundError. Note this is Commons Lang 2, not lang3 — different package.
+    implementation("commons-lang:commons-lang:2.6")
+
     // IntelliJ Platform Gradle Plugin Dependencies Extension - read more: https://plugins.jetbrains.com/docs/intellij/tools-intellij-platform-gradle-plugin-dependencies-extension.html
     intellijPlatform {
         create(providers.gradleProperty("platformType"), providers.gradleProperty("platformVersion"))
