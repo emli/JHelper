@@ -52,11 +52,17 @@ public class TaskUtils {
 
 		return ApplicationManager.getApplication().runWriteAction(
 				(Computable<VirtualFile>) () -> {
+					// PsiDirectory.add, used before, refused to overwrite an existing file. Keep refusing:
+					// silently replacing it would discard a solution the user had already written.
+					if (parent.findChild(fileName) != null) {
+						throw new NotificationException(
+								"Task file already exists",
+								fileName + " already exists in " + parent.getPath() +
+								". Delete the existing task before creating one with the same name."
+						);
+					}
 					try {
-						VirtualFile file = parent.findChild(fileName);
-						if (file == null) {
-							file = parent.createChildData(TaskUtils.class, fileName);
-						}
+						VirtualFile file = parent.createChildData(TaskUtils.class, fileName);
 						VfsUtil.saveText(file, content);
 						return file;
 					}
