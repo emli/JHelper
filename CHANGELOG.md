@@ -3,6 +3,18 @@
 # plugin Changelog
 
 ## [Unreleased]
+### Fixed
+- Parsing died with `NoClassDefFoundError: org/apache/commons/lang/StringEscapeUtils`. CHelper uses
+  Commons Lang 2, which the platform used to provide and no longer does, so the plugin now ships it.
+  This affects the Codeforces, Facebook, HackerEarth, USACO and CodeChef parsers.
+- Parse contest created nothing on Codeforces. Codeforces changed three things the bundled CHelper
+  parser matches literally — `input-file`/`output-file` divs gained a second class, sample lines are
+  now wrapped one per `div` inside the `pre`, and `pre` no longer carries attributes — so every task
+  silently failed to parse. The page is now adapted before CHelper sees it.
+- Parse contest reports when it creates nothing instead of failing silently, and one unparseable task
+  no longer abandons the rest of the contest.
+- A task file is no longer registered as a run configuration before it has been written.
+
 ### Added
 - Support CLion 2026.2 and the Nova C++ engine
 - Support CLion 2025.2

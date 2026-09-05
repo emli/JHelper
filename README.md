@@ -16,15 +16,20 @@ December 2026.
 
 ### Features
 
-- Parse a single problem or a whole contest from the browser, via the CHelper Chrome extension
+- Browse contests and create a task per problem, without leaving the IDE
 - Create task files from a customisable template
 - Add, edit and delete sample test cases
 - Inline your library's `#include` directives into one submission file
 - Run a task against its sample tests through a CMake test runner
 - Copy the generated submission to the clipboard
+- Accept problems sent from the browser by the CHelper Chrome extension
 
-Supported judges include Codeforces, AtCoder, CodeChef, Kattis, HackerRank, HackerEarth, Yandex, USACO,
-CS Academy and Google Code Jam.
+There are two ways to get a problem in, and they support different judges:
+
+| | Judges |
+| --- | --- |
+| **Parse contest**, in the IDE | Codeforces |
+| **Chrome extension**, sent from the browser | Codeforces, AtCoder, CodeChef, Kattis, HackerRank, HackerEarth, Yandex, USACO, CS Academy, Google Code Jam |
 
 ### Note
 
@@ -71,8 +76,15 @@ To bind keyboard shortcuts, use <kbd>Settings</kbd> > <kbd>Keymap</kbd> > <kbd>P
 3. Write your solution, then **Process file** to generate the submission, or **Copy source** to put it
    on the clipboard.
 
-To parse from the browser instead, install the CHelper Chrome extension and use **Parse contest**. The
-plugin listens on port 4243 while a project is open.
+### Parsing a contest
+
+**Parse contest** browses Codeforces from inside the IDE: pick a contest on the left, select the
+problems you want on the right, and press OK. One task is created per selected problem. Problems that
+cannot be fetched are reported individually and do not stop the rest of the contest.
+
+Alternatively, the **CHelper Chrome extension** sends the page you are looking at straight to the IDE,
+which creates the task from it. This covers more judges, and needs no dialog. The plugin listens on port
+4243 while a project is open, so only one JHelper or CHelper project can be open at a time.
 
 ### Templates
 

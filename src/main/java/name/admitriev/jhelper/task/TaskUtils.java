@@ -4,6 +4,7 @@ import com.intellij.execution.RunManager;
 import com.intellij.execution.RunnerAndConfigurationSettings;
 import com.intellij.execution.configurations.ConfigurationFactory;
 import com.intellij.openapi.application.ApplicationManager;
+import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Computable;
 import com.intellij.openapi.vfs.VfsUtil;
@@ -17,6 +18,7 @@ import name.admitriev.jhelper.generation.TemplatesUtils;
 import java.io.IOException;
 
 public class TaskUtils {
+	private static final Logger LOG = Logger.getInstance(TaskUtils.class);
 
 	private TaskUtils() {
 	}
@@ -31,8 +33,11 @@ public class TaskUtils {
 	}
 
 	public static VirtualFile saveNewTask(TaskData taskData, Project project) {
+		// Write the file first. Creating the run configuration first meant that if file creation failed
+		// the project was left with a configuration pointing at a task file that does not exist.
+		VirtualFile file = generateCPP(project, taskData);
 		createConfigurationForTask(project, taskData);
-		return generateCPP(project, taskData);
+		return file;
 	}
 
 	/**
@@ -49,6 +54,12 @@ public class TaskUtils {
 		);
 		String fileName = FileUtils.getFilename(taskData.getCppPath());
 		String content = getTaskContent(project, taskData.getClassName());
+
+		LOG.info(
+				"Creating task file: cppPath=" + taskData.getCppPath() + ", directory=" +
+				FileUtils.getDirectory(taskData.getCppPath()) + ", resolved parent=" +
+				(parent == null ? "null" : parent.getPath()) + ", fileName=" + fileName
+		);
 
 		return ApplicationManager.getApplication().runWriteAction(
 				(Computable<VirtualFile>) () -> {

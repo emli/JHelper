@@ -1,6 +1,7 @@
 package name.admitriev.jhelper.ui;
 
 import com.intellij.notification.NotificationType;
+import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.ComboBox;
 import com.intellij.openapi.ui.DialogWrapper;
@@ -26,6 +27,8 @@ import java.util.Collection;
 import java.util.List;
 
 public class ParseDialog extends DialogWrapper {
+	private static final Logger LOG = Logger.getInstance(ParseDialog.class);
+
 	private JComponent component;
 
 	private ComboBox<Parser> parserComboBox;
@@ -47,7 +50,7 @@ public class ParseDialog extends DialogWrapper {
 		setTitle("Parse contest");
 		JPanel panel = new JPanel(new VerticalLayout());
 
-		parserComboBox = new ComboBox<>(Parser.PARSERS);
+		parserComboBox = new ComboBox<>(name.admitriev.jhelper.parsing.Parsers.all());
 		parserComboBox.setRenderer(
 				new SimpleListCellRenderer<Parser>() {
 					@Override
@@ -194,10 +197,16 @@ public class ParseDialog extends DialogWrapper {
 
 		String path = configuration.getTasksDirectory();
 
+		LOG.info(
+				"Parse contest: " + selectedTasks.size() + " problem(s) selected of " + problemModel.getSize() +
+				" listed, parser=" + (parser == null ? "none" : parser.getName()) + ", tasksDirectory=" + path
+		);
+
 		for (Object taskDescription : selectedTasks) {
 			Description description = (Description) taskDescription;
 			Task rawTask = parser.parseTask(description);
 			if (rawTask == null) {
+				LOG.warn("Parse contest: parseTask returned null for " + description.description);
 				Notificator.showNotification(
 						"Unable to parse task " + description.description,
 						"Connection problems or format change",
@@ -216,6 +225,7 @@ public class ParseDialog extends DialogWrapper {
 			);
 			list.add(myTask);
 		}
+		LOG.info("Parse contest: built " + list.size() + " task(s) from " + selectedTasks.size() + " selection(s)");
 		return list;
 	}
 }
