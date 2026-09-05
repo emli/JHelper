@@ -1,45 +1,46 @@
-# plugin
+# JHelper
 
-![Build](https://github.com/emli/plugin/workflows/Build/badge.svg)
+![Build](https://github.com/emli/JHelper/workflows/Build/badge.svg)
 [![Version](https://img.shields.io/jetbrains/plugin/v/7541-jhelper.svg)](https://plugins.jetbrains.com/plugin/7541-jhelper)
 [![Downloads](https://img.shields.io/jetbrains/plugin/d/7541-jhelper.svg)](https://plugins.jetbrains.com/plugin/7541-jhelper)
 
-## Template ToDo list
-- [x] Create a new [IntelliJ Platform Plugin Template][template] project.
-- [ ] Get familiar with the [template documentation][template].
-- [ ] Adjust the [pluginGroup](./gradle.properties) and [pluginName](./gradle.properties), as well as the [id](./src/main/resources/META-INF/plugin.xml) and [sources package](./src/main/kotlin).
-- [ ] Adjust the plugin description in `README` (see [Tips][docs:plugin-description])
-- [ ] Review the [Legal Agreements](https://plugins.jetbrains.com/docs/marketplace/legal-agreements.html?from=IJPluginTemplate).
-- [ ] [Publish a plugin manually](https://plugins.jetbrains.com/docs/intellij/publishing-plugin.html?from=IJPluginTemplate) for the first time.
-- [ ] Set the `MARKETPLACE_ID` in the above README badges. You can obtain it once the plugin is published to JetBrains Marketplace.
-- [ ] Set the [Plugin Signing](https://plugins.jetbrains.com/docs/intellij/plugin-signing.html?from=IJPluginTemplate) related [secrets](https://github.com/JetBrains/intellij-platform-plugin-template#environment-variables).
-- [ ] Set the [Deployment Token](https://plugins.jetbrains.com/docs/marketplace/plugin-upload.html?from=IJPluginTemplate).
-- [ ] Click the <kbd>Watch</kbd> button on the top of the [IntelliJ Platform Plugin Template][template] to be notified about releases containing new features and fixes.
-- [ ] Configure the [CODECOV_TOKEN](https://docs.codecov.com/docs/quick-start) secret for automated test coverage reports on PRs
-
 <!-- Plugin description -->
 
-Sport programming tool to inline library code and provide testing framework.
+A CLion plugin for competitive programming. It parses problems from online judges, creates a task file
+from your template, manages sample tests, and generates a single submission-ready file by inlining your
+library's includes.
 
-Requires CLion 2026.2 or later and works with the Nova C++ engine, which has been the default since
-CLion 2025.3. Earlier releases of this plugin required the Classic engine, which JetBrains unbundled in
-2026.2 and stops updating in December 2026.
+Requires CLion 2026.2 or later and works with the Nova C++ engine, the default since CLion 2025.3.
+Earlier releases required the Classic engine, which JetBrains unbundled in 2026.2 and stops updating in
+December 2026.
+
+### Features
+
+- Parse a single problem or a whole contest from the browser, via the CHelper Chrome extension
+- Create task files from a customisable template
+- Add, edit and delete sample test cases
+- Inline your library's `#include` directives into one submission file
+- Run a task against its sample tests through a CMake test runner
+- Copy the generated submission to the clipboard
+
+Supported judges include Codeforces, AtCoder, CodeChef, Kattis, HackerRank, HackerEarth, Yandex, USACO,
+CS Academy and Google Code Jam.
 
 ### Note
 
-Dead code elimination is no longer available. It worked by walking the C++ syntax tree to find
-unreferenced declarations, and Nova analyses C++ in a separate backend process without exposing that
-tree to plugins.
+Dead code elimination is not available. It worked by walking the C++ syntax tree to find unreferenced
+declarations, and Nova analyses C++ in a separate backend process without exposing that tree to plugins.
+Submissions therefore contain everything your task file includes.
 
 <!-- Plugin description end -->
 
 ## Installation
 
 - Using the IDE built-in plugin system:
-  
-  <kbd>Settings/Preferences</kbd> > <kbd>Plugins</kbd> > <kbd>Marketplace</kbd> > <kbd>Search for "plugin"</kbd> >
+
+  <kbd>Settings/Preferences</kbd> > <kbd>Plugins</kbd> > <kbd>Marketplace</kbd> > <kbd>Search for "JHelper"</kbd> >
   <kbd>Install</kbd>
-  
+
 - Using JetBrains Marketplace:
 
   Go to [JetBrains Marketplace](https://plugins.jetbrains.com/plugin/7541-jhelper) and install it by clicking the <kbd>Install to ...</kbd> button in case your IDE is running.
@@ -49,37 +50,44 @@ tree to plugins.
 
 - Manually:
 
-  Download the [latest release](https://github.com/emli/plugin/releases/latest) and install it manually using
+  Download the [latest release](https://github.com/emli/JHelper/releases/latest) and install it manually using
   <kbd>Settings/Preferences</kbd> > <kbd>Plugins</kbd> > <kbd>⚙️</kbd> > <kbd>Install plugin from disk...</kbd>
 
+## Usage
+
+After installing, the actions are available in two places, with no setup required:
+
+- **Main toolbar**, to the right of the run and debug buttons — one button per action
+- **Tools | JHelper**
+
+To change where they appear, use <kbd>Settings</kbd> > <kbd>Appearance & Behavior</kbd> > <kbd>Menus and Toolbars</kbd>.
+To bind keyboard shortcuts, use <kbd>Settings</kbd> > <kbd>Keymap</kbd> > <kbd>Plugins</kbd> > <kbd>JHelper</kbd>.
+
+### Getting started
+
+1. **Configure** — set your author name, tasks directory, output file and run file. The output file is
+   where submissions are generated; the run file is the CMake target used to run sample tests.
+2. **Add Task** — creates a task file from your template and opens it at `solve`.
+3. Write your solution, then **Process file** to generate the submission, or **Copy source** to put it
+   on the clipboard.
+
+To parse from the browser instead, install the CHelper Chrome extension and use **Parse contest**. The
+plugin listens on port 4243 while a project is open.
+
+### Templates
+
+`task`, `submission` and `run` templates are read from your project and can be customised. See the
+defaults in [src/main/resources](./src/main/resources).
+
+## Maintainer setup
+
+Still outstanding for releases from this repository:
+
+- [ ] Set the [plugin signing](https://plugins.jetbrains.com/docs/intellij/plugin-signing.html) secrets
+- [ ] Set the [deployment token](https://plugins.jetbrains.com/docs/marketplace/plugin-upload.html) for publishing
+- [ ] Configure the [CODECOV_TOKEN](https://docs.codecov.com/docs/quick-start) secret for coverage reports
 
 ---
 Plugin based on the [IntelliJ Platform Plugin Template][template].
 
 [template]: https://github.com/JetBrains/intellij-platform-plugin-template
-[docs:plugin-description]: https://plugins.jetbrains.com/docs/intellij/plugin-user-experience.html#plugin-description-and-presentation
-
-# JHelper Plugin
-
-This plugin helps competitive programmers to participate in competitions by automating common tasks like parsing contests, creating task files, and generating submission files.
-
-## Features
-
-- Parse contests from various online judges
-- Create task files with test cases
-- Generate submission files by inlining includes
-- Run tests against sample inputs
-
-## Installation
-
-### Important
-
-Before installing, disable:
-
-File → Settings → Advanced Settings → Use the ReSharper C++ language engine (CLion Nova)
-
-Install directly from JetBrains Plugin Repository or download the latest release and install manually.
-
-## Usage
-
-See the documentation for detailed usage instructions.
