@@ -50,7 +50,7 @@ public class ParseDialog extends DialogWrapper {
 		setTitle("Parse contest");
 		JPanel panel = new JPanel(new VerticalLayout());
 
-		parserComboBox = new ComboBox<>(Parser.PARSERS);
+		parserComboBox = new ComboBox<>(name.admitriev.jhelper.parsing.Parsers.all());
 		parserComboBox.setRenderer(
 				new SimpleListCellRenderer<Parser>() {
 					@Override
