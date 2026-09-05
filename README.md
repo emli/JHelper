@@ -21,11 +21,15 @@
 
 Sport programming tool to inline library code and provide testing framework.
 
-### Important
+Requires CLion 2026.2 or later and works with the Nova C++ engine, which has been the default since
+CLion 2025.3. Earlier releases of this plugin required the Classic engine, which JetBrains unbundled in
+2026.2 and stops updating in December 2026.
 
-Before installing, disable:
+### Note
 
-File → Settings → Advanced Settings → Use the ReSharper C++ language engine (CLion Nova)
+Dead code elimination is no longer available. It worked by walking the C++ syntax tree to find
+unreferenced declarations, and Nova analyses C++ in a separate backend process without exposing that
+tree to plugins.
 
 <!-- Plugin description end -->
 

@@ -2,8 +2,7 @@ package name.admitriev.jhelper.actions;
 
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.project.Project;
-import com.intellij.psi.PsiElement;
-import com.jetbrains.cidr.lang.psi.OCFile;
+import com.intellij.openapi.vfs.VirtualFile;
 import name.admitriev.jhelper.IDEUtils;
 import name.admitriev.jhelper.exceptions.NotificationException;
 import name.admitriev.jhelper.task.TaskData;
@@ -27,9 +26,9 @@ public class AddTaskAction extends BaseAction {
 		}
 		TaskData task = dialog.getTask();
 
-		PsiElement generatedFile = TaskUtils.saveNewTask(task, project);
+		VirtualFile generatedFile = TaskUtils.saveNewTask(task, project);
 
-		UIUtils.openMethodInEditor(project, (OCFile) generatedFile, "solve");
+		UIUtils.openMethodInEditor(project, generatedFile, "solve");
 
 		IDEUtils.reloadProject(project);
 	}

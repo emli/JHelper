@@ -41,7 +41,14 @@ public class ConfigurationDialog extends DialogWrapper {
 				RelativeFileChooserDescriptor.fileChooser(project.getBaseDir())
 		);
 
-		codeEliminationOn = new JCheckBox("Eliminate code?", configuration.isCodeEliminationOn());
+		// Dead code elimination needed the C++ syntax tree. CLion Nova analyses C++ in a separate backend
+		// process and exposes no frontend PSI to plugins (CPP-39813), so there is nothing to walk. The
+		// option is left visible, and disabled, so the change is discoverable rather than silent.
+		codeEliminationOn = new JCheckBox("Eliminate code?", false);
+		codeEliminationOn.setEnabled(false);
+		codeEliminationOn.setToolTipText(
+				"Unavailable: this needs the C++ syntax tree, which the CLion Nova engine does not expose to plugins"
+		);
 		codeReformattingOn = new JCheckBox("Reformat code?", configuration.isCodeReformattingOn());
 
 		JPanel panel = new JPanel(new VerticalLayout());

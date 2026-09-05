@@ -2,8 +2,7 @@ package name.admitriev.jhelper.actions;
 
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.project.Project;
-import com.intellij.psi.PsiElement;
-import com.jetbrains.cidr.lang.psi.OCFile;
+import com.intellij.openapi.vfs.VirtualFile;
 import name.admitriev.jhelper.IDEUtils;
 import name.admitriev.jhelper.task.TaskData;
 import name.admitriev.jhelper.task.TaskUtils;
@@ -20,8 +19,8 @@ public class ParseContestAction extends BaseAction {
 			return;
 		}
 		for (TaskData taskData : dialog.getResult()) {
-			PsiElement generatedFile = TaskUtils.saveNewTask(taskData, project);
-			UIUtils.openMethodInEditor(project, (OCFile) generatedFile, "solve");
+			VirtualFile generatedFile = TaskUtils.saveNewTask(taskData, project);
+			UIUtils.openMethodInEditor(project, generatedFile, "solve");
 		}
 
 		IDEUtils.reloadProject(project);

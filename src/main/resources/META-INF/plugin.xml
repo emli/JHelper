@@ -7,10 +7,10 @@
     <description>Sport programming tool to inline library code and provide testing framework.</description>
 
     <change-notes>
-        Support CLion 2025.2
+        Support CLion 2026.2 and the Nova C++ engine
     </change-notes>
 
-    <idea-version since-build="252.23892.426"/>
+    <idea-version since-build="262"/>
 
     <depends>com.intellij.modules.platform</depends>
     <depends>com.intellij.modules.clion</depends>
@@ -23,11 +23,8 @@
         <programRunner implementation="name.admitriev.jhelper.configuration.TaskRunner"/>
         <executionTargetProvider implementation="name.admitriev.jhelper.configuration.TaskConfigurationTargetProvider"/>
         <notificationGroup id="JHelper" displayType="BALLOON"/>
+        <postStartupActivity implementation="name.admitriev.jhelper.components.ChromeParserStartup"/>
     </extensions>
-
-    <application-components>
-        <!-- Add your application components here -->
-    </application-components>
 
     <projectListeners>
         <listener class="name.admitriev.jhelper.components.AutoSwitcher"
@@ -35,12 +32,6 @@
         <listener class="name.admitriev.jhelper.components.AutoSwitcher"
                   topic="com.intellij.openapi.fileEditor.FileEditorManagerListener" />
     </projectListeners>
-
-    <project-components>
-        <component>
-            <implementation-class>name.admitriev.jhelper.components.ChromeParser</implementation-class>
-        </component>
-    </project-components>
 
     <actions>
         <action

@@ -1,15 +1,11 @@
 package name.admitriev.jhelper.generation;
 
 import com.intellij.codeInsight.actions.ReformatCodeProcessor;
-import com.intellij.openapi.command.WriteCommandAction;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.vfs.VirtualFile;
-import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.PsiManager;
-import com.intellij.psi.search.GlobalSearchScope;
-import com.intellij.psi.search.SearchScope;
 import name.admitriev.jhelper.components.Configurator;
 import name.admitriev.jhelper.configuration.TaskConfiguration;
 import name.admitriev.jhelper.exceptions.NotificationException;
@@ -17,9 +13,6 @@ import net.egork.chelper.task.StreamConfiguration;
 import net.egork.chelper.task.Test;
 import net.egork.chelper.task.TestType;
 import org.jetbrains.annotations.NotNull;
-
-import java.util.ArrayList;
-import java.util.Collection;
 
 public class CodeGenerationUtils {
 	private CodeGenerationUtils() {
@@ -64,7 +57,7 @@ public class CodeGenerationUtils {
 			throw new NotificationException("Not a cpp file", "Only cpp files are currently supported");
 		}
 
-		String result = IncludesProcessor.process(inputFile);
+		String result = IncludesProcessor.process(project, inputFile.getVirtualFile());
 		PsiFile psiOutputFile = getOutputFile(project);
 
 		FileUtils.writeToFile(
@@ -75,10 +68,6 @@ public class CodeGenerationUtils {
 
 		Configurator configurator = project.getService(Configurator.class);
 		Configurator.State configuration = configurator.getState();
-
-		if (configuration.isCodeEliminationOn()) {
-			removeUnusedCode(psiOutputFile);
-		}
 
 		if (configuration.isCodeReformattingOn()) {
 			new ReformatCodeProcessor(psiOutputFile, false).run();
@@ -280,26 +269,6 @@ public class CodeGenerationUtils {
 		       " * More info: https://github.com/AlexeyDmitriev/JHelper\n" +
 		       " * @author " + configuration.getAuthor() + '\n' +
 		       " */\n\n";
-	}
-
-	private static void removeUnusedCode(PsiFile file) {
-		while (true) {
-			Collection<PsiElement> toDelete = new ArrayList<>();
-			Project project = file.getProject();
-			SearchScope scope = GlobalSearchScope.fileScope(project, file.getVirtualFile());
-			file.acceptChildren(new DeletionMarkingVisitor(toDelete, scope));
-			if (toDelete.isEmpty()) {
-				break;
-			}
-			WriteCommandAction.writeCommandAction(project).run(
-					() -> {
-						for (PsiElement element : toDelete) {
-							element.delete();
-						}
-					}
-			);
-
-		}
 	}
 
 	/**
