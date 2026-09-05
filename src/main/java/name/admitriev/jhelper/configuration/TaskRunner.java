@@ -150,12 +150,7 @@ public class TaskRunner implements ProgramRunner<RunnerSettings> {
 			@NotNull RunConfiguration configuration,
 			@NotNull Executor executor
 	) {
-		Set<Class<?>> interfaces = new LinkedHashSet<>();
-		for (Class<?> type = configuration.getClass(); type != null; type = type.getSuperclass()) {
-			for (Class<?> each : type.getInterfaces()) {
-				collectInterfaces(each, interfaces);
-			}
-		}
+		Set<Class<?>> interfaces = allInterfacesOf(configuration.getClass());
 		if (!interfaces.contains(RunConfiguration.class)) {
 			LOG.info(configuration.getClass().getName() + " is not a RunConfiguration; not wrapping it");
 			return null;
@@ -181,6 +176,21 @@ public class TaskRunner implements ProgramRunner<RunnerSettings> {
 				interfaces.toArray(new Class<?>[0]),
 				handler
 		);
+	}
+
+	/**
+	 * Every interface the class implements, including those inherited from superclasses and from other
+	 * interfaces. A proxy built over these can stand in for the class anywhere an interface of it is
+	 * expected — which is what CLion's runner requires of the profile.
+	 */
+	static @NotNull Set<Class<?>> allInterfacesOf(@NotNull Class<?> type) {
+		Set<Class<?>> collected = new LinkedHashSet<>();
+		for (Class<?> each = type; each != null; each = each.getSuperclass()) {
+			for (Class<?> implemented : each.getInterfaces()) {
+				collectInterfaces(implemented, collected);
+			}
+		}
+		return collected;
 	}
 
 	private static void collectInterfaces(@NotNull Class<?> type, @NotNull Set<Class<?>> collected) {
