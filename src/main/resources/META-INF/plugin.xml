@@ -34,6 +34,21 @@
     </projectListeners>
 
     <actions>
+        <!--
+          Groups every action under Tools | JHelper and on the main toolbar, so the plugin is usable
+          straight after installation. Without an add-to-group the actions are registered but belong to
+          no menu, leaving Find Action as the only way to reach them.
+        -->
+        <group
+                id="name.admitriev.jhelper.JHelperGroup"
+                text="JHelper"
+                description="JHelper actions"
+                popup="true"
+                icon="/name/admitriev/jhelper/icons/task.png"
+        >
+            <add-to-group group-id="ToolsMenu" anchor="last"/>
+            <add-to-group group-id="MainToolBar" anchor="last"/>
+
         <action
                 id="name.admitriev.jhelper.actions.configureAction"
                 class="name.admitriev.jhelper.actions.ConfigureAction"
@@ -83,5 +98,6 @@
                 description="Inlines includes from the current file"
                 icon="/name/admitriev/jhelper/icons/task.png"
         />
+        </group>
     </actions>
 </idea-plugin>
