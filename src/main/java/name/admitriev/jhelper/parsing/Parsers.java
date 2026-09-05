@@ -3,6 +3,9 @@ package name.admitriev.jhelper.parsing;
 import net.egork.chelper.parser.CodeforcesParser;
 import net.egork.chelper.parser.Parser;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * The parsers the plugin offers, with any that need adapting to current markup wrapped.
  *
@@ -15,16 +18,22 @@ public class Parsers {
 	private static final Parser CODEFORCES = new CodeforcesParserFix(new CodeforcesParser());
 
 	/**
-	 * The bundled parser list, with Codeforces replaced by the adapted one.
+	 * Parsers offered in the Parse contest dialog.
+	 *
+	 * CHelper also bundles Timus and Russian CodeCup, which are not offered. Both scrape markup that
+	 * has not been maintained for years, and neither is in use here.
+	 *
+	 * This is only the contest-browsing list. Parsing a page sent by the Chrome extension goes through
+	 * {@code ChromeParser}, which still recognises the other judges CHelper supports.
 	 */
 	public static Parser[] all() {
-		Parser[] parsers = Parser.PARSERS.clone();
-		for (int i = 0; i < parsers.length; i++) {
-			if (parsers[i] instanceof CodeforcesParser) {
-				parsers[i] = CODEFORCES;
+		List<Parser> parsers = new ArrayList<>();
+		for (Parser parser : Parser.PARSERS) {
+			if (parser instanceof CodeforcesParser) {
+				parsers.add(CODEFORCES);
 			}
 		}
-		return parsers;
+		return parsers.toArray(new Parser[0]);
 	}
 
 	/**
