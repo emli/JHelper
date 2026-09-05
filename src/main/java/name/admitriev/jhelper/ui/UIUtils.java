@@ -1,19 +1,18 @@
 package name.admitriev.jhelper.ui;
 
+import com.intellij.openapi.editor.Document;
+import com.intellij.openapi.fileEditor.FileDocumentManager;
 import com.intellij.openapi.fileEditor.OpenFileDescriptor;
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.util.Ref;
-import com.intellij.psi.PsiElement;
+import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.ui.DocumentAdapter;
-import com.jetbrains.cidr.lang.psi.OCBlockStatement;
-import com.jetbrains.cidr.lang.psi.OCFile;
-import com.jetbrains.cidr.lang.psi.OCFunctionDefinition;
-import com.jetbrains.cidr.lang.psi.visitors.OCRecursiveVisitor;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
 import javax.swing.event.DocumentEvent;
 import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class UIUtils {
 	private UIUtils() {
@@ -79,32 +78,26 @@ public class UIUtils {
 	/**
 	 * Finds method @{code methodName} in @{code file} and opens it in an editor.
 	 */
-	public static void openMethodInEditor(Project project, OCFile file, String methodName) {
-		new OpenFileDescriptor(
-				project,
-				file.getVirtualFile(),
-				findMethodBody(file, methodName).getTextOffset()
-		).navigate(true);
+	public static void openMethodInEditor(Project project, VirtualFile file, String methodName) {
+		new OpenFileDescriptor(project, file, findMethodBodyOffset(file, methodName)).navigate(true);
 	}
 
-	private static PsiElement findMethodBody(OCFile file, @NotNull String method) {
-		Ref<PsiElement> result = new Ref<>();
-		file.accept(
-				new OCRecursiveVisitor() {
-					@Override
-					public void visitFunctionDefinition(OCFunctionDefinition ocFunctionDefinition) {
-						if (method.equals(ocFunctionDefinition.getName())) {
-							// continue recursion
-							super.visitFunctionDefinition(ocFunctionDefinition);
-						}
-					}
-
-					@Override
-					public void visitBlockStatement(OCBlockStatement ocBlockStatement) {
-						result.set(ocBlockStatement.getOpeningBrace().getNextSibling());
-					}
-				}
-		);
-		return result.get();
+	/**
+	 * Locates the first statement of {@code method}'s body by scanning the file text.
+	 *
+	 * CLion Nova exposes no frontend PSI (see CPP-39813), so the function definition can't be found by
+	 * walking a syntax tree. Falls back to the top of the file when the method isn't found.
+	 */
+	private static int findMethodBodyOffset(VirtualFile file, @NotNull String method) {
+		Document document = FileDocumentManager.getInstance().getDocument(file);
+		if (document == null) {
+			return 0;
+		}
+		// matches `solve(...) {`, tolerating a return type, qualifiers and line breaks, but not
+		// crossing a `;` (a declaration) or another `{` (an unrelated body)
+		Matcher matcher = Pattern
+				.compile("\\b" + Pattern.quote(method) + "\\s*\\([^;{}]*\\)[^;{}]*\\{")
+				.matcher(document.getText());
+		return matcher.find() ? matcher.end() : 0;
 	}
 }

@@ -1,11 +1,11 @@
 package name.admitriev.jhelper.components;
 
 import com.intellij.notification.NotificationType;
-import com.intellij.openapi.components.ProjectComponent;
+import com.intellij.openapi.Disposable;
+import com.intellij.openapi.components.Service;
 import com.intellij.openapi.project.Project;
-import com.intellij.psi.PsiElement;
+import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.util.text.StringTokenizer;
-import com.jetbrains.cidr.lang.psi.OCFile;
 import name.admitriev.jhelper.IDEUtils;
 import name.admitriev.jhelper.network.SimpleHttpServer;
 import name.admitriev.jhelper.task.TaskData;
@@ -23,9 +23,13 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * A Component to monitor request from CHelper Chrome Extension and parse them to Tasks
+ * A project service to monitor requests from the CHelper Chrome Extension and parse them to Tasks.
+ *
+ * Started by {@link ChromeParserStartup}; {@code ProjectComponent}, which this used to implement, was
+ * removed from the platform.
  */
-public class ChromeParser implements ProjectComponent {
+@Service(Service.Level.PROJECT)
+public final class ChromeParser implements Disposable {
 	private static final int PORT = 4243;
 	private static final Map<String, Parser> PARSERS;
 
@@ -49,14 +53,16 @@ public class ChromeParser implements ProjectComponent {
 	}
 
 	private SimpleHttpServer server = null;
-	private Project project;
+	private final Project project;
 
 	public ChromeParser(Project project) {
 		this.project = project;
 	}
 
-	@Override
-	public void projectOpened() {
+	public synchronized void start() {
+		if (server != null) {
+			return;
+		}
 		try {
 			server = new SimpleHttpServer(
 					new InetSocketAddress("localhost", PORT),
@@ -95,8 +101,8 @@ public class ChromeParser implements ProjectComponent {
 									rawTask.testType,
 									rawTask.tests
 							);
-							PsiElement generatedFile = TaskUtils.saveNewTask(task, project);
-							UIUtils.openMethodInEditor(project, (OCFile) generatedFile, "solve");
+							VirtualFile generatedFile = TaskUtils.saveNewTask(task, project);
+							UIUtils.openMethodInEditor(project, generatedFile, "solve");
 						}
 
 						IDEUtils.reloadProject(project);
@@ -115,9 +121,10 @@ public class ChromeParser implements ProjectComponent {
 	}
 
 	@Override
-	public void projectClosed() {
+	public synchronized void dispose() {
 		if (server != null) {
 			server.stop();
+			server = null;
 		}
 	}
 }

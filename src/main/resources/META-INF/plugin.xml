@@ -4,13 +4,13 @@
     <version>_patched_</version>
     <vendor url="https://github.com/AlexeyDmitriev/JHelper">JHelper</vendor>
 
-    <description>Sport programming tool to inline library code and provide testing framework.</description>
+    <description>Competitive programming tool to inline library code and provide testing framework.</description>
 
     <change-notes>
-        Support CLion 2025.2
+        Support CLion 2026.2 and the Nova C++ engine
     </change-notes>
 
-    <idea-version since-build="252.23892.426"/>
+    <idea-version since-build="262"/>
 
     <depends>com.intellij.modules.platform</depends>
     <depends>com.intellij.modules.clion</depends>
@@ -23,11 +23,8 @@
         <programRunner implementation="name.admitriev.jhelper.configuration.TaskRunner"/>
         <executionTargetProvider implementation="name.admitriev.jhelper.configuration.TaskConfigurationTargetProvider"/>
         <notificationGroup id="JHelper" displayType="BALLOON"/>
+        <postStartupActivity implementation="name.admitriev.jhelper.components.ChromeParserStartup"/>
     </extensions>
-
-    <application-components>
-        <!-- Add your application components here -->
-    </application-components>
 
     <projectListeners>
         <listener class="name.admitriev.jhelper.components.AutoSwitcher"
@@ -36,13 +33,11 @@
                   topic="com.intellij.openapi.fileEditor.FileEditorManagerListener" />
     </projectListeners>
 
-    <project-components>
-        <component>
-            <implementation-class>name.admitriev.jhelper.components.ChromeParser</implementation-class>
-        </component>
-    </project-components>
-
     <actions>
+        <!--
+          The actions are declared once here, then placed twice below: flat on the main toolbar so each
+          one is a single click, and nested under Tools | JHelper so the menu stays tidy.
+        -->
         <action
                 id="name.admitriev.jhelper.actions.configureAction"
                 class="name.admitriev.jhelper.actions.ConfigureAction"
@@ -92,5 +87,50 @@
                 description="Inlines includes from the current file"
                 icon="/name/admitriev/jhelper/icons/task.png"
         />
+
+        <!--
+          Toolbar placement. popup="false" inlines the children, so each action is its own button rather
+          than a dropdown that has to be opened first. The new UI keeps the run configuration widget and
+          the run/debug buttons in MainToolbarRight; MainToolBar is the classic UI equivalent and is
+          ignored when the new UI is active.
+        -->
+        <group id="name.admitriev.jhelper.JHelperToolbarGroup" text="JHelper" popup="false">
+            <!--
+              MainToolbarRight holds, in order, the run widget and run/debug buttons, then
+              SearchEverywhere and SettingsEntryPoint. Anchoring first landed the group left of the run
+              widget, so anchor before SearchEverywhere instead: that is immediately right of the
+              run/debug buttons and still left of the search and settings icons.
+            -->
+            <add-to-group group-id="MainToolbarRight" anchor="before" relative-to-action="SearchEverywhere"/>
+            <add-to-group group-id="MainToolBar" anchor="last"/>
+
+            <reference ref="name.admitriev.jhelper.actions.AddTaskAction"/>
+            <reference ref="name.admitriev.jhelper.actions.ParseContestAction"/>
+            <reference ref="name.admitriev.jhelper.actions.ProcessAction"/>
+            <reference ref="name.admitriev.jhelper.actions.CopySourceAction"/>
+            <reference ref="name.admitriev.jhelper.actions.EditTestsAction"/>
+            <reference ref="name.admitriev.jhelper.actions.DeleteTaskAction"/>
+            <reference ref="name.admitriev.jhelper.actions.configureAction"/>
+            <separator/>
+        </group>
+
+        <!-- Menu placement, kept as a submenu so seven entries don't flood the Tools menu. -->
+        <group
+                id="name.admitriev.jhelper.JHelperGroup"
+                text="JHelper"
+                description="JHelper actions"
+                popup="true"
+                icon="/name/admitriev/jhelper/icons/task.png"
+        >
+            <add-to-group group-id="ToolsMenu" anchor="last"/>
+
+            <reference ref="name.admitriev.jhelper.actions.AddTaskAction"/>
+            <reference ref="name.admitriev.jhelper.actions.ParseContestAction"/>
+            <reference ref="name.admitriev.jhelper.actions.ProcessAction"/>
+            <reference ref="name.admitriev.jhelper.actions.CopySourceAction"/>
+            <reference ref="name.admitriev.jhelper.actions.EditTestsAction"/>
+            <reference ref="name.admitriev.jhelper.actions.DeleteTaskAction"/>
+            <reference ref="name.admitriev.jhelper.actions.configureAction"/>
+        </group>
     </actions>
 </idea-plugin>

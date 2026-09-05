@@ -15,8 +15,10 @@ group = providers.gradleProperty("pluginGroup").get()
 version = providers.gradleProperty("pluginVersion").get()
 
 // Set the JVM language level used to build the project.
+// CLion 2026.2 ships Java 25 bytecode (class file major version 69), so compiling against it with an
+// older toolchain fails with "class file has wrong version".
 kotlin {
-    jvmToolchain(21)
+    jvmToolchain(25)
 }
 
 // Configure project's dependencies
