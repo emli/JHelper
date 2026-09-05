@@ -4,6 +4,7 @@ import com.intellij.execution.RunManager;
 import com.intellij.execution.RunnerAndConfigurationSettings;
 import com.intellij.execution.configurations.ConfigurationFactory;
 import com.intellij.openapi.application.ApplicationManager;
+import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Computable;
 import com.intellij.openapi.vfs.VfsUtil;
@@ -17,6 +18,7 @@ import name.admitriev.jhelper.generation.TemplatesUtils;
 import java.io.IOException;
 
 public class TaskUtils {
+	private static final Logger LOG = Logger.getInstance(TaskUtils.class);
 
 	private TaskUtils() {
 	}
@@ -52,6 +54,12 @@ public class TaskUtils {
 		);
 		String fileName = FileUtils.getFilename(taskData.getCppPath());
 		String content = getTaskContent(project, taskData.getClassName());
+
+		LOG.info(
+				"Creating task file: cppPath=" + taskData.getCppPath() + ", directory=" +
+				FileUtils.getDirectory(taskData.getCppPath()) + ", resolved parent=" +
+				(parent == null ? "null" : parent.getPath()) + ", fileName=" + fileName
+		);
 
 		return ApplicationManager.getApplication().runWriteAction(
 				(Computable<VirtualFile>) () -> {

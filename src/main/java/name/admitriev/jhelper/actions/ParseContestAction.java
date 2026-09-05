@@ -2,6 +2,7 @@ package name.admitriev.jhelper.actions;
 
 import com.intellij.notification.NotificationType;
 import com.intellij.openapi.actionSystem.AnActionEvent;
+import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vfs.VirtualFile;
 import name.admitriev.jhelper.IDEUtils;
@@ -15,12 +16,15 @@ import name.admitriev.jhelper.ui.UIUtils;
 import java.util.Collection;
 
 public class ParseContestAction extends BaseAction {
+	private static final Logger LOG = Logger.getInstance(ParseContestAction.class);
+
 	@Override
 	protected void performAction(AnActionEvent e) {
 		Project project = e.getProject();
 		ParseDialog dialog = new ParseDialog(project);
 		dialog.show();
 		if (!dialog.isOK()) {
+			LOG.info("Parse contest: dialog cancelled");
 			return;
 		}
 
@@ -45,6 +49,7 @@ public class ParseContestAction extends BaseAction {
 			catch (NotificationException exception) {
 				// Report and carry on. Aborting here left the rest of the contest uncreated, which was
 				// especially easy to hit when one task file already existed.
+				LOG.warn("Parse contest: couldn't create task " + taskData.getName(), exception);
 				Notificator.showNotification(
 						"Couldn't create task " + taskData.getName(),
 						exception.getContent(),
@@ -52,6 +57,8 @@ public class ParseContestAction extends BaseAction {
 				);
 			}
 		}
+
+		LOG.info("Parse contest: created " + created + " of " + tasks.size() + " task(s)");
 
 		if (created > 0) {
 			IDEUtils.reloadProject(project);
