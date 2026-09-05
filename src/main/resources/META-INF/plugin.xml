@@ -47,6 +47,10 @@
                 icon="/name/admitriev/jhelper/icons/task.png"
         >
             <add-to-group group-id="ToolsMenu" anchor="last"/>
+            <!-- New UI: the run configuration widget and run/debug buttons sit in MainToolbarRight, so
+                 this puts the JHelper menu beside them. MainToolBar is the classic UI equivalent; the
+                 unused one of the two is simply ignored. -->
+            <add-to-group group-id="MainToolbarRight" anchor="first"/>
             <add-to-group group-id="MainToolBar" anchor="last"/>
 
         <action
