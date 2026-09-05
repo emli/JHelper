@@ -35,24 +35,9 @@
 
     <actions>
         <!--
-          Groups every action under Tools | JHelper and on the main toolbar, so the plugin is usable
-          straight after installation. Without an add-to-group the actions are registered but belong to
-          no menu, leaving Find Action as the only way to reach them.
+          The actions are declared once here, then placed twice below: flat on the main toolbar so each
+          one is a single click, and nested under Tools | JHelper so the menu stays tidy.
         -->
-        <group
-                id="name.admitriev.jhelper.JHelperGroup"
-                text="JHelper"
-                description="JHelper actions"
-                popup="true"
-                icon="/name/admitriev/jhelper/icons/task.png"
-        >
-            <add-to-group group-id="ToolsMenu" anchor="last"/>
-            <!-- New UI: the run configuration widget and run/debug buttons sit in MainToolbarRight, so
-                 this puts the JHelper menu beside them. MainToolBar is the classic UI equivalent; the
-                 unused one of the two is simply ignored. -->
-            <add-to-group group-id="MainToolbarRight" anchor="first"/>
-            <add-to-group group-id="MainToolBar" anchor="last"/>
-
         <action
                 id="name.admitriev.jhelper.actions.configureAction"
                 class="name.admitriev.jhelper.actions.ConfigureAction"
@@ -102,6 +87,44 @@
                 description="Inlines includes from the current file"
                 icon="/name/admitriev/jhelper/icons/task.png"
         />
+
+        <!--
+          Toolbar placement. popup="false" inlines the children, so each action is its own button rather
+          than a dropdown that has to be opened first. The new UI keeps the run configuration widget and
+          the run/debug buttons in MainToolbarRight; MainToolBar is the classic UI equivalent and is
+          ignored when the new UI is active.
+        -->
+        <group id="name.admitriev.jhelper.JHelperToolbarGroup" text="JHelper" popup="false">
+            <add-to-group group-id="MainToolbarRight" anchor="first"/>
+            <add-to-group group-id="MainToolBar" anchor="last"/>
+
+            <reference ref="name.admitriev.jhelper.actions.AddTaskAction"/>
+            <reference ref="name.admitriev.jhelper.actions.ParseContestAction"/>
+            <reference ref="name.admitriev.jhelper.actions.ProcessAction"/>
+            <reference ref="name.admitriev.jhelper.actions.CopySourceAction"/>
+            <reference ref="name.admitriev.jhelper.actions.EditTestsAction"/>
+            <reference ref="name.admitriev.jhelper.actions.DeleteTaskAction"/>
+            <reference ref="name.admitriev.jhelper.actions.configureAction"/>
+            <separator/>
+        </group>
+
+        <!-- Menu placement, kept as a submenu so seven entries don't flood the Tools menu. -->
+        <group
+                id="name.admitriev.jhelper.JHelperGroup"
+                text="JHelper"
+                description="JHelper actions"
+                popup="true"
+                icon="/name/admitriev/jhelper/icons/task.png"
+        >
+            <add-to-group group-id="ToolsMenu" anchor="last"/>
+
+            <reference ref="name.admitriev.jhelper.actions.AddTaskAction"/>
+            <reference ref="name.admitriev.jhelper.actions.ParseContestAction"/>
+            <reference ref="name.admitriev.jhelper.actions.ProcessAction"/>
+            <reference ref="name.admitriev.jhelper.actions.CopySourceAction"/>
+            <reference ref="name.admitriev.jhelper.actions.EditTestsAction"/>
+            <reference ref="name.admitriev.jhelper.actions.DeleteTaskAction"/>
+            <reference ref="name.admitriev.jhelper.actions.configureAction"/>
         </group>
     </actions>
 </idea-plugin>
