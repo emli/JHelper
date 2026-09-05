@@ -7,6 +7,7 @@
 #include <vector>
 #include <cctype>
 #include <ctime>
+#include <algorithm>
 
 namespace jhelper {
 
@@ -25,6 +26,30 @@ bool check(std::string expected, std::string actual) {
 	return expected == actual;
 }
 
+// The IDE builds its test tree from these messages rather than from the printed text, so every value
+// has to be escaped the way the service message format requires.
+std::string escape(const std::string& value) {
+	std::string result;
+	result.reserve(value.size());
+	for (char c : value) {
+		switch (c) {
+			case '|':  result += "||"; break;
+			case '\'': result += "|'"; break;
+			case '\n': result += "|n"; break;
+			case '\r': result += "|r"; break;
+			case '[':  result += "|["; break;
+			case ']':  result += "|]"; break;
+			default:   result += c;
+		}
+	}
+	return result;
+}
+
+void message(const std::string& body) {
+	// flushed immediately: the IDE reads these as the process runs, to update the tree live
+	std::cout << "##teamcity[" << body << "]" << std::endl;
+}
+
 } // namespace jhelper
 
 int main() {
@@ -35,45 +60,62 @@ int main() {
 	int testID = 0;
 	std::cout << std::fixed;
 	double maxTime = 0.0;
+
+	jhelper::message("testingStarted");
+	jhelper::message("testSuiteStarted name='" + jhelper::escape("%ClassName%") + "'");
+
 	for(const jhelper::Test& test: tests ) {
-		std::cout << "Test #" << ++testID << std::endl;
-		std::cout << "Input: \n" << test.input << std::endl;
+		std::string name = "Test #" + std::to_string(++testID);
+		jhelper::message("testStarted name='" + jhelper::escape(name) + "' captureStandardOutput='true'");
+
+		if (!test.active) {
+			jhelper::message("testIgnored name='" + jhelper::escape(name) + "' message='Test is not active'");
+			jhelper::message("testFinished name='" + jhelper::escape(name) + "'");
+			continue;
+		}
+
+		std::stringstream in(test.input);
+		std::ostringstream out;
+		std::clock_t start = std::clock();
+		%ClassName% solver;
+		%SolverCall%
+		std::clock_t finish = std::clock();
+		double currentTime = double(finish - start) / CLOCKS_PER_SEC;
+		maxTime = std::max(currentTime, maxTime);
+
+		// captured under the test node in the tree, so each test carries its own input and output
+		std::cout << "Input:\n" << test.input << std::endl;
+		std::cout << "Actual output:\n" << out.str() << std::endl;
+
 		if (test.has_output) {
-			std::cout << "Expected output: \n" << test.output << std::endl;
-		}
-		else {
-			std::cout << "Expected output: \n" << "N/A" << std::endl;
-		}
-		if (test.active) {
-			std::stringstream in(test.input);
-			std::ostringstream out;
-			std::clock_t start = std::clock();
-			%ClassName% solver;
-			%SolverCall%
-			std::clock_t finish = std::clock();
-			double currentTime = double(finish - start) / CLOCKS_PER_SEC;
-			maxTime = std::max(currentTime, maxTime);
-			std::cout << "Actual output: \n" << out.str() << std::endl;
-			if (test.has_output) {
-				bool result = jhelper::check(test.output, out.str());
-				allOK = allOK && result;
-				std::cout << "Result: " << (result ? "OK" : "Wrong answer") << std::endl;
+			if (jhelper::check(test.output, out.str())) {
+				std::cout << "Result: OK" << std::endl;
 			}
-			std::cout << "Time: " << currentTime << std::endl;
+			else {
+				allOK = false;
+				// type='comparisonFailure' is what gives the click-through diff of expected against actual
+				jhelper::message(
+					"testFailed type='comparisonFailure' name='" + jhelper::escape(name) +
+					"' message='" + jhelper::escape("Wrong answer") +
+					"' expected='" + jhelper::escape(test.output) +
+					"' actual='" + jhelper::escape(out.str()) + "'"
+				);
+			}
 		}
 		else {
-			std::cout << "SKIPPED\n";
+			std::cout << "Expected output: N/A" << std::endl;
 		}
 
-		std::cout << std::endl;
+		long durationMillis = (long)(currentTime * 1000);
+		jhelper::message(
+			"testFinished name='" + jhelper::escape(name) +
+			"' duration='" + std::to_string(durationMillis) + "'"
+		);
+	}
 
-	}
-	if(allOK) {
-		std::cout << "All OK" << std::endl;
-	}
-	else {
-		std::cout << "Some cases failed" << std::endl;
-	}
+	jhelper::message("testSuiteFinished name='" + jhelper::escape("%ClassName%") + "'");
+	jhelper::message("testingFinished");
+
 	std::cout << "Maximal time: " << maxTime << "s." << std::endl;
-	return 0;
+	return allOK ? 0 : 1;
 }

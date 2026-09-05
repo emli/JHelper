@@ -4,6 +4,10 @@
 
 ## [Unreleased]
 ### Added
+- Sample tests now run as real IDE tests. Results appear in the test tool window as a tree with per-test
+  pass, fail and ignored state, timing, captured input and output, and a diff between expected and
+  actual output for a wrong answer, instead of scrolling past as console text. The test runner also
+  exits non-zero when a sample fails, so it reports failure to anything that inspects the exit code.
 - Support CLion 2026.2 and the Nova C++ engine
 - Support CLion 2025.2
 
