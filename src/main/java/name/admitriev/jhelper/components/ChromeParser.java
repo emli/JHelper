@@ -95,7 +95,7 @@ public final class ChromeParser implements Disposable {
 							TaskData task = new TaskData(
 									rawTask.name,
 									rawTask.taskClass,
-									String.format("%s/%s.cpp", path, rawTask.taskClass),
+									TaskUtils.cppPathFor(path, rawTask.contestName, rawTask.taskClass),
 									rawTask.input,
 									rawTask.output,
 									rawTask.testType,

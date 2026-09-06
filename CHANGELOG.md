@@ -4,6 +4,10 @@
 
 ## [Unreleased]
 ### Fixed
+- Parsing a second contest failed on every problem whose letter the first contest also had. Task classes
+  are named after the problem letter, so every contest has a TaskA, and writing them all straight into
+  the tasks directory meant the second one collided with the first. Parsed tasks now go into a folder
+  named after their contest. A contest with no usable name keeps the flat layout.
 - Parsing died with `NoClassDefFoundError: org/apache/commons/lang/StringEscapeUtils`. CHelper uses
   Commons Lang 2, which the platform used to provide and no longer does, so the plugin now ships it.
   This affects the Codeforces, Facebook, HackerEarth, USACO and CodeChef parsers.

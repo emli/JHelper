@@ -12,6 +12,7 @@ import com.intellij.ui.components.JBScrollPane;
 import name.admitriev.jhelper.components.Configurator;
 import name.admitriev.jhelper.parsing.Receiver;
 import name.admitriev.jhelper.task.TaskData;
+import name.admitriev.jhelper.task.TaskUtils;
 import net.egork.chelper.parser.Description;
 import net.egork.chelper.parser.Parser;
 import net.egork.chelper.parser.ParserTask;
@@ -217,7 +218,7 @@ public class ParseDialog extends DialogWrapper {
 			TaskData myTask = new TaskData(
 					rawTask.name,
 					rawTask.taskClass,
-					String.format("%s/%s.cpp", path, rawTask.taskClass),
+					TaskUtils.cppPathFor(path, rawTask.contestName, rawTask.taskClass),
 					rawTask.input,
 					rawTask.output,
 					(TestType) testType.getSelectedItem(),
