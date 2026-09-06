@@ -24,6 +24,37 @@ public class TaskUtils {
 	}
 
 	/**
+	 * Where a parsed task's source file goes: below a folder named after its contest.
+	 *
+	 * Contests reuse problem letters, so every one of them has a TaskA. Writing them all straight into
+	 * the tasks directory means the second contest parsed collides with the first, and creating the task
+	 * is refused because a file of that name already exists.
+	 *
+	 * A contest without a usable name falls back to the flat layout rather than inventing a folder.
+	 */
+	public static String cppPathFor(String tasksDirectory, String contestName, String taskClass) {
+		String folder = folderNameFor(contestName);
+		if (folder.isEmpty()) {
+			return String.format("%s/%s.cpp", tasksDirectory, taskClass);
+		}
+		return String.format("%s/%s/%s.cpp", tasksDirectory, folder, taskClass);
+	}
+
+	/**
+	 * Turns a contest name into something usable as a directory name. Contest names carry spaces,
+	 * punctuation and separators — "Codeforces Round 1119 (Div. 3)" — none of which belong in a path.
+	 */
+	static String folderNameFor(String contestName) {
+		if (contestName == null) {
+			return "";
+		}
+		String folder = contestName.trim().replaceAll("[^A-Za-z0-9._-]+", "_");
+		// leading dots would hide the directory, and a bare "." or ".." would escape it
+		folder = folder.replaceAll("^[._]+", "").replaceAll("[._]+$", "");
+		return folder;
+	}
+
+	/**
 	 * Generates task file content depending on custom user template
 	 */
 	private static String getTaskContent(Project project, String className) {
